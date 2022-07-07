@@ -1,0 +1,25 @@
+name: Mayhem for API
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Start API
+      run: |
+        docker-compose up -d
+        for i in {1..90} ; do curl --silent http://localhost:3000/ && echo API up && break; sleep 5s; done
+
+
+    - name: Run Mayhem for API to check for vulnerabilities
+      uses: ForAllSecure/mapi-action@v1
+      with:
+        mapi-token: ${{secrets.MAPI_TOKEN}}
+        api-url: http://localhost:3000
+        api-spec: http://localhost:3000
+        target: compose-postgrest
+        duration: 90sec
