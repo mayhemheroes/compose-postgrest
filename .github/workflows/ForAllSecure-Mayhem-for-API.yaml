@@ -12,13 +12,13 @@ jobs:
     - name: Start API
       run: |
         docker-compose up -d
-        for i in {1..90} ; do curl --silent http://localhost:3000/ && echo API up && break; sleep 5s; done
-
+        for i in {1..90} ; do curl --silent http://localhost:3000/ && printf '\n\nAPI Up!\n\n' && break; sleep 5s; done
 
     - name: Run Mayhem for API to check for vulnerabilities
       uses: ForAllSecure/mapi-action@v1
       with:
-        mapi-token: ${{secrets.MAPI_TOKEN}}
+        mapi-token: ${{secrets.PLATFORM_TOKEN}}
+        mapi-url: https://beta.mayhem.security
         api-url: http://localhost:3000
         api-spec: http://localhost:3000
         target: compose-postgrest
